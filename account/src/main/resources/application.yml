@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: account
+  profiles:
+    active: dev
+
+server:
+  port: 8080
+management:
+  health:
+    probes:
+      enabled: true
+  server:
+    port: 8080
+  endpoints:
+    web:
+      base-path: "/"
+
+preferences:
+  api:
+    url: http://localhost:8081
+
+opentracing:
+  jaeger:
+    enabled: false
+
+--- 
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+preferences:
+  api:
+    url: http://preferences:8080
+
+server:
+  port: 8080
+management:
+  server:
+    port: 8081
+
+opentracing:
+  jaeger:
+    enabled: true
+    service:
+      name: account
+    endpoint: http://jaeger-collector.istio-system.svc:14268/api/traces
+    propagation: b3
+    sampler_type: const
+    sampler_param: 1
